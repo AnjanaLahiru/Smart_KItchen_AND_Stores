@@ -161,6 +161,11 @@
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Shared\_ViewDashboards.cshtml" />
     <Content Include="Views\Dashboard\Dashboard.cshtml" />
+    <Content Include="Views\Shared\_ViewOtherNavbar.cshtml" />
+    <Content Include="Views\ItemType\ItemType.cshtml" />
+    <Content Include="Views\ItemCategory\ItemCategory.cshtml" />
+    <Content Include="Views\ItemSubCategory\ItemSubCategory.cshtml" />
+    <Content Include="Views\ItemCreation\ItemCreation.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -173,10 +178,6 @@
     <Folder Include="Content\Js\" />
     <Folder Include="Controllers\Kitchen\" />
     <Folder Include="Views\Default\" />
-    <Folder Include="Views\ItemCategory\" />
-    <Folder Include="Views\ItemCreation\" />
-    <Folder Include="Views\ItemSubCategory\" />
-    <Folder Include="Views\ItemType\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
