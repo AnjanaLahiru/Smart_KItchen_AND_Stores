@@ -1,0 +1,78 @@
+﻿@model Smart_KItchen_AND_Stores.Models.User
+@{
+    ViewBag.Title = "Login";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Imprima:wght@400&family=Inria+Serif:wght@400;700&family=Inria+Sans:wght@400&family=Inter:wght@700&display=swap" rel="stylesheet">
+    <link href="~/Content/Css/StyleSheet.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="kitchen-login">
+        <div class="login-background"></div>
+        <img src="~/Content/Images/naturub.jpg" alt="Naturub Logo" class="logo" />
+        <div class="title">Smart Kitchen Store</div>
+
+        @using (Html.BeginForm("Login", "Login", FormMethod.Post, new { @class = "login-form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            if (ViewBag.ErrorMessage != null)
+            {
+                <div class="validation-summary-errors">
+                    <ul><li>@ViewBag.ErrorMessage</li></ul>
+                </div>
+            }
+
+            <div class="user-icon"></div>
+            <div class="username-label">Username</div>
+            <input type="text" name="Username" id="Username" class="username-input"
+                   placeholder="Enter your username" value="@(Model != null ? Model.Username : "")" required />
+
+            <div class="padlock-icon"></div>
+            <div class="password-label">Password</div>
+            <input type="password" name="Password" id="passwordField" class="password-input"
+                   placeholder="Enter your password" required />
+
+            <input type="checkbox" class="show-password-checkbox" id="showPasswordCheck" />
+            <label for="showPasswordCheck" class="show-password-label">Show Password</label>
+
+            <div class="info-box">
+                <div class="warning-icon"></div>
+                <div class="info-text">Please enter your credentials to access the Kitchen & Stores Management System</div>
+            </div>
+
+            <button type="submit" class="login-button">
+                <div class="login-icon"></div>
+                <div class="login-text">Login</div>
+            </button>
+
+            <button type="button" class="clear-button" onclick="clearForm()">
+                <div class="eraser-icon"></div>
+                <div class="clear-text">Clear</div>
+            </button>
+        }
+
+        <div class="footer-text">Naturub © 2025 - Contact IT Support for assistance</div>
+    </div>
+
+    <script>
+        document.getElementById('showPasswordCheck').addEventListener('change', function () {
+            var passwordField = document.getElementById('passwordField');
+            passwordField.type = this.checked ? 'text' : 'password';
+        });
+
+        function clearForm() {
+            document.getElementById('Username').value = '';
+            document.getElementById('passwordField').value = '';
+            document.getElementById('showPasswordCheck').checked = false;
+            document.getElementById('passwordField').type = 'password';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/Css/DashboardStyles.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="store-container">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="company-info">
+                    <div class="company-title-line">
+                        <h1>
+                            <span class="main-company">NATURUB Exports International(PVT)LTD</span>
+                            <span class="store-name">&nbsp;&nbsp; Smart Kitchen Store</span>
+                        </h1>
+                        <h2></h2>
+                    </div>
+                    <p class="welcome-text">Welcome!, @ViewBag.UserDisplayName</p>
+                </div>
+                <div class="header-actions">
+                    <button class="mail-btn" onclick="openMail()">
+                        <i class="fas fa-envelope"></i>
+                    </button>
+                    <button class="logout-btn" onclick="logout()">
+                        Log Out
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="store-main">
+            <aside class="store-sidebar">
+                <nav class="sidebar-nav">
+                    <div class="nav-item">
+                        <button class="nav-btn has-submenu @(ViewContext.RouteData.Values["action"].ToString() == "Store" ? "active" : "")" onclick="toggleStoreSubmenu()" id="storeBtn">
+                            <i class="fas fa-store"></i>
+                            Store
+                        </button>
+                        <div class="sub-nav" id="homeSubmenu">
+                            <div class="sub-nav-item">
+                                <button class="sub-nav-btn has-sub-submenu @(ViewContext.RouteData.Values["action"].ToString() == "ItemCreation" ? "active" : "")" onclick="handleItemCreation()" id="itemCreationBtn">
+                                    <i class="fas fa-plus"></i>
+                                    Master
+                                </button>
+                                <div class="sub-sub-nav" id="itemCreationSubmenu">
+                                    <button class="sub-sub-nav-btn @(ViewContext.RouteData.Values["action"].ToString() == "ItemType" ? "active" : "")" onclick="handleItemType()">
+                                        <i class="fas fa-tags"></i>
+                                        Item Type
+                                    </button>
+                                    <button class="sub-sub-nav-btn @(ViewContext.RouteData.Values["action"].ToString() == "ItemCategory" ? "active" : "")" onclick="handleItemCategory()">
+                                        <i class="fas fa-tags"></i>
+                                        Item Category
+                                    </button>
+                                    <button class="sub-sub-nav-btn @(ViewContext.RouteData.Values["action"].ToString() == "ItemSubCategory" ? "active" : "")" onclick="handleItemSubCategory()">
+                                        <i class="fas fa-tags"></i>
+                                        Item Sub Category
+                                    </button>
+                                    <button class="sub-sub-nav-btn @(ViewContext.RouteData.Values["action"].ToString() == "ItemCreation" ? "active" : "")" onclick="handleItemCreation()">
+                                        <i class="fas fa-tags"></i>
+                                        Item Creation
+                                    </button>
+                                </div>
+                            </div>
+                            <button class="sub-nav-btn @(ViewContext.RouteData.Values["action"].ToString() == "MainCategory" ? "active" : "")" onclick="handleMainCategory()">
+                                <i class="fas fa-list"></i>
+                                Main Category
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="nav-item">
+                        <button class="nav-btn has-submenu @(ViewContext.RouteData.Values["action"].ToString() == "SInventory" || ViewContext.RouteData.Values["action"].ToString() == "Kitchen1" || ViewContext.RouteData.Values["action"].ToString() == "Kitchen2" ? "active" : "")" onclick="toggleKitchenSubmenu()" id="kitchenBtn">
+                            <i class="fas fa-plus-circle"></i>
+                            Kitchen
+                        </button>
+                        <div class="sub-nav" id="kitchenSubmenu">
+                            <button class="sub-nav-btn @(ViewContext.RouteData.Values["action"].ToString() == "Kitchen1" ? "active" : "")" onclick="handleKitchen1()">
+                                <i class="fas fa-utensils"></i>
+                                Kitchen1
+                            </button>
+                            <button class="sub-nav-btn @(ViewContext.RouteData.Values["action"].ToString() == "Kitchen2" ? "active" : "")" onclick="handleKitchen2()">
+                                <i class="fas fa-fire-burner"></i>
+                                Kitchen2
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+                @*<div class="sidebar-footer">
+                        <button class="back-btn" onclick="goBackToDashboard()">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Dashboard
+                        </button>
+                    </div>*@
+            </aside>
+
+            <main class="store-content">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function toggleStoreSubmenu() {
+            const storeBtn = document.getElementById('storeBtn');
+            const homeSubmenu = document.getElementById('homeSubmenu');
+
+            if (homeSubmenu.classList.contains('expanded')) {
+                homeSubmenu.classList.remove('expanded');
+                storeBtn.classList.remove('expanded');
+                collapseItemCreationSubmenu();
+            } else {
+                collapseKitchenSubmenu();
+                homeSubmenu.classList.add('expanded');
+                storeBtn.classList.add('expanded');
+            }
+        }
+
+        function toggleKitchenSubmenu() {
+            const kitchenBtn = document.getElementById('kitchenBtn');
+            const kitchenSubmenu = document.getElementById('kitchenSubmenu');
+
+            if (kitchenSubmenu.classList.contains('expanded')) {
+                kitchenSubmenu.classList.remove('expanded');
+                kitchenBtn.classList.remove('expanded');
+            } else {
+                collapseHomeSubmenu();
+                kitchenSubmenu.classList.add('expanded');
+                kitchenBtn.classList.add('expanded');
+            }
+        }
+
+        function toggleItemCreationSubmenu() {
+            const itemCreationBtn = document.getElementById('itemCreationBtn');
+            const itemCreationSubmenu = document.getElementById('itemCreationSubmenu');
+
+            if (itemCreationSubmenu.classList.contains('expanded')) {
+                itemCreationSubmenu.classList.remove('expanded');
+                itemCreationBtn.classList.remove('expanded');
+            } else {
+                itemCreationSubmenu.classList.add('expanded');
+                itemCreationBtn.classList.add('expanded');
+            }
+        }
+
+        function collapseItemCreationSubmenu() {
+            const itemCreationSubmenu = document.getElementById('itemCreationSubmenu');
+            const itemCreationBtn = document.getElementById('itemCreationBtn');
+            itemCreationSubmenu.classList.remove('expanded');
+            itemCreationBtn.classList.remove('expanded');
+        }
+
+        function collapseKitchenSubmenu() {
+            const kitchenSubmenu = document.getElementById('kitchenSubmenu');
+            const kitchenBtn = document.getElementById('kitchenBtn');
+            kitchenSubmenu.classList.remove('expanded');
+            kitchenBtn.classList.remove('expanded');
+        }
+
+        function handleItemType() {
+            setActiveSubSubButton('ItemType');
+            window.location.href = '@Url.Action("ItemType", "Store")';
+        }
+         function handleItemSubCategory() {
+            setActiveSubSubButton('ItemSubCategory');
+            window.location.href = '@Url.Action("ItemSubCategory", "Store")';
+        }
+         function handleItemCreation() {
+            setActiveSubSubButton('ItemCreation');
+            window.location.href = '@Url.Action("ItemCreation", "Store")';
+        }
+        function handleItemCategory() {
+            setActiveSubSubButton('ItemCategory');
+            window.location.href = '@Url.Action("ItemCategory", "Store")';
+        }
+
+        function handleItemCreation() {
+            toggleItemCreationSubmenu();
+        }
+
+        function handleMainCategory() {
+            setActiveSubButton('MainCategory');
+            collapseItemCreationSubmenu();
+            window.location.href = '@Url.Action("MainCategory", "Store")';
+        }
+
+        function handleStore() {
+            toggleStoreSubmenu();
+        }
+
+        function handleSInventory() {
+            toggleKitchenSubmenu();
+        }
+
+        function handleKitchen1() {
+            setActiveInventorySubButton('Kitchen1');
+            window.location.href = '@Url.Action("Kitchen1", "SInventory")';
+        }
+
+        function handleKitchen2() {
+            setActiveInventorySubButton('Kitchen2');
+            window.location.href = '@Url.Action("Kitchen2", "SInventory")';
+        }
+
+        function setActiveButton(index) {
+            const buttons = document.querySelectorAll('.nav-btn:not(.has-submenu)');
+            buttons.forEach((btn, i) => {
+                btn.classList.remove('active');
+            });
+            if (buttons[index]) {
+                buttons[index].classList.add('active');
+            }
+
+            document.getElementById('storeBtn').classList.remove('active');
+            document.getElementById('kitchenBtn').classList.remove('active');
+            document.querySelectorAll('.sub-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelectorAll('.sub-sub-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+        }
+
+        function setActiveSubButton(action) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.querySelectorAll('.sub-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.querySelectorAll('.sub-sub-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById('storeBtn').classList.add('active');
+
+            document.querySelectorAll('.sub-nav-btn').forEach(btn => {
+                if (btn.textContent.trim().replace(/\s+/g, '') === action.replace(/\s+/g, '')) {
+                    btn.classList.add('active');
+                }
+            });
+
+            document.getElementById('homeSubmenu').classList.add('expanded');
+            document.getElementById('storeBtn').classList.add('expanded');
+            collapseItemCreationSubmenu();
+            collapseKitchenSubmenu();
+        }
+
+        function setActiveInventorySubButton(action) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.querySelectorAll('.sub-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.querySelectorAll('.sub-sub-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById('kitchenBtn').classList.add('active');
+
+            document.querySelectorAll('.sub-nav-btn').forEach(btn => {
+                if (btn.textContent.trim().replace(/\s+/g, '') === action.replace(/\s+/g, '')) {
+                    btn.classList.add('active');
+                }
+            });
+
+            document.getElementById('kitchenSubmenu').classList.add('expanded');
+            document.getElementById('kitchenBtn').classList.add('expanded');
+            collapseHomeSubmenu();
+        }
+
+        function setActiveSubSubButton(action) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.querySelectorAll('.sub-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.querySelectorAll('.sub-sub-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById('storeBtn').classList.add('active');
+            document.getElementById('itemCreationBtn').classList.add('active');
+
+            document.querySelectorAll('.sub-sub-nav-btn').forEach(btn => {
+                if (btn.textContent.trim().replace(/\s+/g, '') === action.replace(/\s+/g, '')) {
+                    btn.classList.add('active');
+                }
+            });
+
+            document.getElementById('homeSubmenu').classList.add('expanded');
+            document.getElementById('storeBtn').classList.add('expanded');
+            document.getElementById('itemCreationSubmenu').classList.add('expanded');
+            document.getElementById('itemCreationBtn').classList.add('expanded');
+            collapseKitchenSubmenu();
+        }
+
+        function collapseHomeSubmenu() {
+            const homeSubmenu = document.getElementById('homeSubmenu');
+            const storeBtn = document.getElementById('storeBtn');
+            homeSubmenu.classList.remove('expanded');
+            storeBtn.classList.remove('expanded');
+            collapseItemCreationSubmenu();
+        }
+
+        @*function goBackToDashboard() {
+            window.location.href = '@Url.Action("Dashboard", "Dashboard")';
+        }*@
+
+        function openMail() {
+            alert('Mail functionality - to be implemented');
+        }
+
+        function logout() {
+            window.location.href = '@Url.Action("Logout", "Login")';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Store layout loaded');
+
+            const currentAction = '@ViewContext.RouteData.Values["action"]';
+
+            if (currentAction === 'ItemCreation' || currentAction === 'MainCategory') {
+                document.getElementById('homeSubmenu').classList.add('expanded');
+                document.getElementById('storeBtn').classList.add('expanded');
+                document.getElementById('storeBtn').classList.add('active');
+            }
+
+            if (currentAction === 'CreateCategory' || currentAction === 'CreateId') {
+                document.getElementById('homeSubmenu').classList.add('expanded');
+                document.getElementById('storeBtn').classList.add('expanded');
+                document.getElementById('storeBtn').classList.add('active');
+                document.getElementById('itemCreationSubmenu').classList.add('expanded');
+                document.getElementById('itemCreationBtn').classList.add('expanded');
+                document.getElementById('itemCreationBtn').classList.add('active');
+            }
+
+            if (currentAction === 'Kitchen1' || currentAction === 'Kitchen2') {
+                document.getElementById('kitchenSubmenu').classList.add('expanded');
+                document.getElementById('kitchenBtn').classList.add('expanded');
+                document.getElementById('kitchenBtn').classList.add('active');
+            }
+        });
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
